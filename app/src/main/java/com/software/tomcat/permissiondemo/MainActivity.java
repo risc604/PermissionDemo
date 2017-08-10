@@ -11,14 +11,18 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+
+// https://stackoverflow.com/questions/34342816/android-6-0-multiple-permissions
+// https://stackoverflow.com/questions/44944559/cant-create-folder-in-android-7-0?answertab=active#tab-top
+// https://stackoverflow.com/questions/34040355/how-to-check-the-multiple-permission-at-single-request-in-android-m
+
+
 
 public class MainActivity extends AppCompatActivity
 {
