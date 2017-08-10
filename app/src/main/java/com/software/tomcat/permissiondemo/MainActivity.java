@@ -21,8 +21,8 @@ import java.util.List;
 // https://stackoverflow.com/questions/34342816/android-6-0-multiple-permissions
 // https://stackoverflow.com/questions/44944559/cant-create-folder-in-android-7-0?answertab=active#tab-top
 // https://stackoverflow.com/questions/34040355/how-to-check-the-multiple-permission-at-single-request-in-android-m
-
-
+// https://stackoverflow.com/questions/32347532/android-m-permissions-confused-on-the-usage-of-shouldshowrequestpermissionrati
+// https://stackoverflow.com/questions/32347532/android-m-permissions-confused-on-the-usage-of-shouldshowrequestpermissionrati
 
 public class MainActivity extends AppCompatActivity
 {
@@ -72,6 +72,15 @@ public class MainActivity extends AppCompatActivity
                 {
                     Toast.makeText(this, "permissions: " + grantResults[0], Toast.LENGTH_SHORT).show();
                 }
+                else if (grantResults[0] == PackageManager.PERMISSION_DENIED)
+                {
+                    if (!shouldShowRequestPermissionRationale(permissions[0]))
+                    {
+                        Toast.makeText(this, "Please grant by manual\n in Android settings ->\n App -> permission",
+                                Toast.LENGTH_LONG).show();
+                        showDeniedDialog(permissions[0]);
+                    }
+                }
                 else
                 {
                     String permis = "";
@@ -103,6 +112,10 @@ public class MainActivity extends AppCompatActivity
             result = ContextCompat.checkSelfPermission(this, p);
             if (result != PackageManager.PERMISSION_GRANTED)
             {
+                //if (!shouldShowRequestPermissionRationale(p))
+                //{
+                //    Toast.makeText(this, "Please grant the permission this time", Toast.LENGTH_LONG).show();
+                //}
                 listPermissionsNeeded.add(p);
             }
         }
