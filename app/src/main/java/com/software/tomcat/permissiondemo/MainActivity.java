@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     private static final int    MULTIPLE_PERMISSIONS = 10;
     private static final int    REQUEST_ENABLE_BT = 20;
 
-    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothAdapter mBluetoothAdapter = null;
     //BluetoothManager bluetoothManager = null;
 
     String[] permissions = new String[]
@@ -102,11 +102,14 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode)
         {
             case MULTIPLE_PERMISSIONS:
+                Log.w(TAG, "=== permissions[0]: " + permissions[0] +
+                        ", grantResults[0]: " + grantResults[0]);
                 if ((grantResults.length > 0) &&
                     (grantResults[0] == PackageManager.PERMISSION_GRANTED))
                 {
-                    enableBluetooth();
-                    Toast.makeText(this, "permissions: " + grantResults[0], Toast.LENGTH_SHORT).show();
+                    //if (permissions[0].equalsIgnoreCase(Manifest.permission.ACCESS_COARSE_LOCATION))
+                        enableBluetooth();
+                    Toast.makeText(this, "permissions: " + permissions[0], Toast.LENGTH_SHORT).show();
                 }
                 else if (grantResults[0] == PackageManager.PERMISSION_DENIED)
                 {
@@ -149,25 +152,33 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "initControl()...");
         if (checkPermissions())
         {
-            enableBluetooth();
+            final String[] msg = {""};
+
+            //enableBluetooth();
             handler = new Handler();
             runnable = new Runnable() {
                 @Override
-                public void run() {
-                    Toast.makeText(MainActivity.this, "2 min to shudown/turn on BLE", Toast.LENGTH_SHORT).show();
-                    if ((mBluetoothAdapter != null) && mBluetoothAdapter.isEnabled())
+                public void run()
+                {
+                    //String msg = "";
+                    if ((mBluetoothAdapter != null) && mBluetoothAdapter.isEnabled()) {
                         mBluetoothAdapter.disable();
-                    else
+                        msg[0] = "Shutdown BLE.";
+                    }
+                    else {
                         enableBluetooth();
+                        msg[0] = "Turn on BLE.";
+                    }
+                    Toast.makeText(MainActivity.this, msg[0], Toast.LENGTH_SHORT).show();
 
                     handler.postDelayed(runnable, 2*60*1000);
                 }
             };
-            handler.postAtTime(runnable, System.currentTimeMillis()+2*60*1000);
+            //handler.postAtTime(runnable, System.currentTimeMillis()+2*60*1000);
             handler.postDelayed(runnable, 2*60*1000);
 
             Toast.makeText(this, "onCreate(),\n permissions OK. ", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "after 2 minutes to shutdown BLE.");
+            Log.d(TAG, "after 2 minutes to " + msg[0]);
         }
         else
         {
