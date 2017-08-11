@@ -56,23 +56,14 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //initView();
-        if (checkPermissions())
-        {
-            Log.d(TAG, "checkPermissions OK.");
-        }
-        else
-        {
-            Log.d(TAG, "checkPermissions Fail.");
-        }
-
-
+        initView();
+        initControl();
     }
 
     @Override
     protected void onStart()
     {
-        initControl();
+        //initControl();
         super.onStart();
     }
 
