@@ -77,8 +77,10 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode)
         {
             case REQUEST_ENABLE_BT:
-                if (resultCode == RESULT_OK)
-                    showDeniedDialog("BLE enabled.");
+                if (resultCode == RESULT_OK) {
+                    //showDeniedDialog("BLE enabled.");
+                    Log.d(TAG, "Intent data: " + Arrays.toString(data.getStringArrayExtra("")));
+                }
                 else if (resultCode == RESULT_CANCELED)
                 {
                     showDeniedDialog("BLE Fail !!");
