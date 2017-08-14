@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 else if (grantResults[0] == PackageManager.PERMISSION_DENIED)
                 {
-                    if (shouldShowRequestPermissionRationale(permissions[0]))
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0]))
                     {
                         Toast.makeText(this, "Please grant by manual\n in Android settings ->\n App -> permission",
                                 Toast.LENGTH_LONG).show();
@@ -152,39 +153,40 @@ public class MainActivity extends AppCompatActivity
     private void initControl()
     {
         Log.d(TAG, "initControl()...");
-        if (checkPermissions())
-        {
-            final String[] msg = {""};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkPermissions()) {
+                final String[] msg = {""};
 
-            //enableBluetooth();
-            handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run()
-                {
-                    //String msg = "";
-                    if ((mBluetoothAdapter != null) && mBluetoothAdapter.isEnabled()) {
-                        mBluetoothAdapter.disable();
-                        msg[0] = "Shutdown BLE.";
+                //enableBluetooth();
+                handler = new Handler();
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        //String msg = "";
+                        if ((mBluetoothAdapter != null) && mBluetoothAdapter.isEnabled()) {
+                            mBluetoothAdapter.disable();
+                            msg[0] = "Shutdown BLE.";
+                        } else {
+                            enableBluetooth();
+                            msg[0] = "Turn on BLE.";
+                        }
+                        Toast.makeText(MainActivity.this, msg[0], Toast.LENGTH_SHORT).show();
+
+                        handler.postDelayed(runnable, 2 * 60 * 1000);
                     }
-                    else {
-                        enableBluetooth();
-                        msg[0] = "Turn on BLE.";
-                    }
-                    Toast.makeText(MainActivity.this, msg[0], Toast.LENGTH_SHORT).show();
+                };
+                //handler.postAtTime(runnable, System.currentTimeMillis()+2*60*1000);
+                handler.postDelayed(runnable, 2 * 60 * 1000);
 
-                    handler.postDelayed(runnable, 2*60*1000);
-                }
-            };
-            //handler.postAtTime(runnable, System.currentTimeMillis()+2*60*1000);
-            handler.postDelayed(runnable, 2*60*1000);
-
-            Toast.makeText(this, "onCreate(),\n permissions OK. ", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "after 2 minutes to " + msg[0]);
+                Toast.makeText(this, "onCreate(),\n permissions OK. ", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "after 2 minutes to " + msg[0]);
+            } else {
+                finish();
+            }
         }
         else
         {
-            finish();
+            Toast.makeText(this, " Android system version < 6.0 !!", Toast.LENGTH_LONG).show();
         }
     }
 
